@@ -33,19 +33,20 @@ const registerUser = async (req, res) => {
             res.send({
                 success: true,
                 message: "Registration successful",
+                token: generateJWT(newUser._id),
             });
         })
         .catch((err) => {
             console.log(err);
             res.send({
                 success: false,
-                message: err,
+                message: err
             });
         });
 };
 // ========================JWT========================
 const generateJWT = (id) => {
-    return jwt.toString({ id }, process.env.JWT_SECRET, {
+    return jwt.sign({ id }, process.env.JWT_SECRET, {
         expiresIn: "30d",
     });
 };
@@ -61,12 +62,11 @@ const loginUser = async (req, res) => {
     }
     const user = await User.findOne({ email });
     if (user && (await bcrypt.compare(password, user.password))) {
-        const jwt = generateJWT(user._id);
         console.log(jwt);
         res.send({
             success: true,
             message: "Login successful",
-            data: jwt,
+            token: generateJWT(user._id),
         });
     } else {
         res.send({
