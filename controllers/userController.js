@@ -63,7 +63,6 @@ const loginUser = asyncHandler(async (req, res) => {
     }
     const user = await User.findOne({ email });
     if (user && (await bcrypt.compare(password, user.password))) {
-        console.log(jwt);
         res.send({
             success: true,
             message: "Login successful",
@@ -95,8 +94,10 @@ const getAllUsers = asyncHandler(async (req, res) => {
 });
 
 const getMe = asyncHandler(async (req,res)=>{
+    console.log(req.user)
     const {_id,username,email} = await User.findById(req.user.id);
     res.send({
+        success:true,
         id:_id,
         username,
         email
