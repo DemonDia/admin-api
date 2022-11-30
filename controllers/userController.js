@@ -1,9 +1,10 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require("../models/userModel");
+const asyncHandler = require("express-async-handler");
 
 // ========================register========================
-const registerUser = async (req, res) => {
+const registerUser = asyncHandler(async (req, res) => {
     const username = req.body.username;
     const email = req.body.email;
     const password = req.body.password;
@@ -40,10 +41,10 @@ const registerUser = async (req, res) => {
             console.log(err);
             res.send({
                 success: false,
-                message: err
+                message: err,
             });
         });
-};
+});
 // ========================JWT========================
 const generateJWT = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -52,7 +53,7 @@ const generateJWT = (id) => {
 };
 
 // ========================login========================
-const loginUser = async (req, res) => {
+const loginUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {
         res.send({
@@ -74,9 +75,9 @@ const loginUser = async (req, res) => {
             message: "Invalid pasword or user",
         });
     }
-};
+});
 
-const getAllUsers = async (req, res) => {
+const getAllUsers = asyncHandler(async (req, res) => {
     await User.find()
         .then((result) => {
             res.send({
@@ -91,6 +92,15 @@ const getAllUsers = async (req, res) => {
                 message: err,
             });
         });
-};
+});
 
-module.exports = { registerUser, loginUser, getAllUsers };
+const getMe = asyncHandler(async (req,res)=>{
+    const {_id,username,email} = await User.findById(req.user.id);
+    res.send({
+        id:_id,
+        username,
+        email
+    })
+})
+
+module.exports = { registerUser, loginUser, getAllUsers,getMe };
