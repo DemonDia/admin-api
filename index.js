@@ -28,4 +28,4 @@ connect();
 
 app.use("/api/users",require("./routes/userRoutes"))
 
-app.listen(3000);
+app.listen(8000);
