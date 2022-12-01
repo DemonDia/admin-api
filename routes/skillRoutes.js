@@ -12,5 +12,5 @@ router.get("/all", getAllSkills);
 router.post("/add", protect, addSkill);
 router.get("/:userId", protect, getUserSkills);
 router.put("/", protect, updateSkill);
-router.delete("/",protect,deleteSkill)
+router.delete("/:skillId",protect,deleteSkill)
 module.exports = router;

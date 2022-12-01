@@ -36,7 +36,6 @@ const getUserSkills = async (req, res) => {
         } else {
             await Skill.find({ userId: userId })
                 .then((result) => {
-                    console.log(result);
                     res.send({
                         success: true,
                         data: result,
@@ -114,7 +113,7 @@ const updateSkill = async (req, res) => {
 };
 // ========================delete a skill on db========================
 const deleteSkill = async (req, res) => {
-    const skillId = req.body.id;
+    const skillId = req.params.skillId;
     if (skillId.length != 24) {
         res.send({
             success: false,
@@ -128,13 +127,21 @@ const deleteSkill = async (req, res) => {
                     message: "Skill does not exist!",
                 });
             } else {
-                Skill.deleteOne(result).then((result) => {
-                    console.log(result);
-                    res.send({
-                        success: true,
-                        message: "Skill deleted",
+                Skill.deleteOne(result)
+                    .then((deleteResult) => {
+                        console.log(deleteResult);
+                        res.send({
+                            success: true,
+                            message: "Skill deleted",
+                        });
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        res.send({
+                            success: false,
+                            message: err,
+                        });
                     });
-                });
             }
         });
     }
