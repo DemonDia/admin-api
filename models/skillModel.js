@@ -7,6 +7,10 @@ const skillSchema = mongoose.Schema({
     year:{
         type:String,
         required:[true,"Please add a year"]
+    },
+    userId:{
+        type:String,
+        required:[true,"Please add a user"]
     }
 })
 

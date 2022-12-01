@@ -27,5 +27,5 @@ async function connect() {
 connect();
 
 app.use("/api/users",require("./routes/userRoutes"))
-
+app.use("/api/skills",require("./routes/skillRoutes"))
 app.listen(8000);
