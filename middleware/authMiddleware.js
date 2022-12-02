@@ -16,14 +16,18 @@ const protect = asyncHandler(async (req, res, next) => {
 
             next();
         } catch (err) {
-            console.log(err)
+            console.log(err);
             res.send({
-                success:false,
-                message:"Unauthorised"
-            })
+                success: false,
+                message: "Unauthorised",
+            });
         }
+    } else {
+        res.send({
+            success: false,
+            message: "Unauthorised",
+        });
     }
 });
-
 
 module.exports = { protect };
