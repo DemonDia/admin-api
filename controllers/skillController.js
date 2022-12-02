@@ -50,7 +50,7 @@ const getUserSkills = async (req, res) => {
         }
     }
 };
-// ========================add a skill on db========================
+// ========================add a skill to db========================
 const addSkill = async (req, res) => {
     const userId = req.body.userId;
     if (userId.length != 24) {

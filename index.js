@@ -28,4 +28,5 @@ connect();
 
 app.use("/api/users",require("./routes/userRoutes"))
 app.use("/api/skills",require("./routes/skillRoutes"))
+app.use("/api/experience",require("./routes/experienceRoutes"))
 app.listen(8000);
