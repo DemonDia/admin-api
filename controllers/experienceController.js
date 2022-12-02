@@ -19,7 +19,37 @@ const getAllExperiences = async (req, res) => {
         });
 };
 // ========================get all user experiences on db========================
-const getUserExperiences = async (req, res) => {};
+const getUserExperiences = async (req, res) => {
+    userId = req.params.userId;
+    if (userId.length != 24) {
+        res.send({
+            success: false,
+            message: "User does not exist",
+        });
+    } else {
+        const getUser = await User.findOne({ _id: userId });
+        if (!getUser) {
+            res.send({
+                success: false,
+                message: "User does not exist",
+            });
+        } else {
+            await Experience.find({ userId: userId })
+                .then((result) => {
+                    res.send({
+                        success: true,
+                        data: result,
+                    });
+                })
+                .catch((err) => {
+                    res.send({
+                        success: false,
+                        message: err,
+                    });
+                });
+        }
+    }
+};
 // ========================add an experience to db========================
 const addExperience = async (req, res) => {
     const userId = req.body.userId;
