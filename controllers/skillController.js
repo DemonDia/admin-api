@@ -2,7 +2,6 @@ const Skill = require("../models/skillModel");
 const User = require("../models/userModel");
 // ========================get all skills on db========================
 const getAllSkills = async (req, res) => {
-    console.log("LOL");
     await Skill.find()
         .then((result) => {
             res.send({

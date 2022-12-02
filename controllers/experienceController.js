@@ -2,7 +2,22 @@ const Experience = require("../models/experienceModel");
 const User = require("../models/userModel");
 
 // ========================get all experiences on db========================
-const getAllExperiences = async (req, res) => {};
+const getAllExperiences = async (req, res) => {
+    await Experience.find()
+        .then((result) => {
+            res.send({
+                success: true,
+                data: result,
+            });
+        })
+        .catch((err) => {
+            console.log(err);
+            res.send({
+                success: false,
+                message: err,
+            });
+        });
+};
 // ========================get all user experiences on db========================
 const getUserExperiences = async (req, res) => {};
 // ========================add an experience to db========================
