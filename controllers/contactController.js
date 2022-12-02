@@ -90,7 +90,43 @@ const addContact = async (req, res) => {
     }
 };
 // ========================update specific contact to db========================
-const updateContact = async (req, res) => {};
+const updateContact = async (req, res) => {
+    await Contact.findById(req.body.id).then((result) => {
+        if (!result) {
+            res.send({
+                success: false,
+                message: "Contact does not exist!",
+            });
+        } else {
+            if (result.userId != req.body.userId) {
+                res.send({
+                    success: false,
+                    message: "User does not have that contact",
+                });
+            } else {
+                Contact.updateOne(
+                    { _id: result._id },
+                    {
+                        contactname: req.body.contactname,
+                        contact: req.body.contactinfo,
+                    }
+                )
+                    .then((result) => {
+                        res.send({
+                            success: true,
+                            message: "Contact updated",
+                        });
+                    })
+                    .catch((err) => {
+                        res.send({
+                            success: false,
+                            message: err,
+                        });
+                    });
+            }
+        }
+    });
+};
 // ========================delect specific contact from db========================
 const deleteContact = async (req, res) => {};
 
