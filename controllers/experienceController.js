@@ -129,7 +129,40 @@ const updateExperience = async (req, res) => {
     });
 };
 // ========================delete an experience on db========================
-const deleteExperience = async (req, res) => {};
+const deleteExperience = async (req, res) => {
+    const experienceId = req.params.experienceId;
+    if (experienceId.length != 24) {
+        res.send({
+            success: false,
+            message: "Experience does not exist!",
+        });
+    } else {
+        await Experience.findById(experienceId).then((result) => {
+            if (!result) {
+                res.send({
+                    success: false,
+                    message: "Experience does not exist!",
+                });
+            } else {
+                Experience.deleteOne(result)
+                    .then((deleteResult) => {
+                        console.log(deleteResult);
+                        res.send({
+                            success: true,
+                            message: "Experience deleted",
+                        });
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        res.send({
+                            success: false,
+                            message: err,
+                        });
+                    });
+            }
+        });
+    }
+};
 
 module.exports = {
     getAllExperiences,

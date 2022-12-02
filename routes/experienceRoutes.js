@@ -12,5 +12,5 @@ router.get("/all", getAllExperiences);
 router.post("/add", protect, addExperience);
 router.get("/:userId", protect, getUserExperiences);
 router.put("/", protect, updateExperience);
-router.delete("/:skillId",protect,deleteExperience)
+router.delete("/:experienceId",protect,deleteExperience)
 module.exports = router;
