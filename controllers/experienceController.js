@@ -102,29 +102,36 @@ const updateExperience = async (req, res) => {
                 message: "Experience does not exist!",
             });
         } else {
-            Experience.updateOne(
-                { _id: result._id },
-                {
-                    rolename: req.body.rolename,
-                    companyname: req.body.companyname,
-                    comapanysite: req.body.comapanysite,
-                    starting: req.body.starting,
-                    ending: req.body.ending,
-                    details: req.body.details,
-                }
-            )
-                .then((result) => {
-                    res.send({
-                        success: true,
-                        message: "Experience updated",
-                    });
-                })
-                .catch((err) => {
-                    res.send({
-                        success: false,
-                        message: err,
-                    });
+            if (result.userId != req.body.userId) {
+                res.send({
+                    success: false,
+                    message: "User does not have that experience",
                 });
+            } else {
+                Experience.updateOne(
+                    { _id: result._id },
+                    {
+                        rolename: req.body.rolename,
+                        companyname: req.body.companyname,
+                        comapanysite: req.body.comapanysite,
+                        starting: req.body.starting,
+                        ending: req.body.ending,
+                        details: req.body.details,
+                    }
+                )
+                    .then((result) => {
+                        res.send({
+                            success: true,
+                            message: "Experience updated",
+                        });
+                    })
+                    .catch((err) => {
+                        res.send({
+                            success: false,
+                            message: err,
+                        });
+                    });
+            }
         }
     });
 };

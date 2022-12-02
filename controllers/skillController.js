@@ -98,20 +98,29 @@ const updateSkill = async (req, res) => {
                 message: "Skill does not exist!",
             });
         } else {
-            Skill.updateOne(
-                { _id: result._id },
-                { skillname: req.body.name, year: req.body.year }
-            ).then((result) => {
-                res.send({
-                    success: true,
-                    message: "Skill updated",
-                });
-            }).catch(err=>{
+            if (result.userId != req.body.userId) {
                 res.send({
                     success: false,
-                    message: err,
+                    message: "User does not have that skill",
                 });
-            });
+            } else {
+                Skill.updateOne(
+                    { _id: result._id },
+                    { skillname: req.body.name, year: req.body.year }
+                )
+                    .then((result) => {
+                        res.send({
+                            success: true,
+                            message: "Skill updated",
+                        });
+                    })
+                    .catch((err) => {
+                        res.send({
+                            success: false,
+                            message: err,
+                        });
+                    });
+            }
         }
     });
 };
@@ -125,27 +134,35 @@ const deleteSkill = async (req, res) => {
         });
     } else {
         await Skill.findById(skillId).then((result) => {
+            console.log(req.body);
             if (!result) {
                 res.send({
                     success: false,
                     message: "Skill does not exist!",
                 });
             } else {
-                Skill.deleteOne(result)
-                    .then((deleteResult) => {
-                        console.log(deleteResult);
-                        res.send({
-                            success: true,
-                            message: "Skill deleted",
-                        });
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                        res.send({
-                            success: false,
-                            message: err,
-                        });
+                if (result.userId != req.body.userId) {
+                    res.send({
+                        success: false,
+                        message: "User does not have that skill",
                     });
+                } else {
+                    Skill.deleteOne(result)
+                        .then((deleteResult) => {
+                            console.log(deleteResult);
+                            res.send({
+                                success: true,
+                                message: "Skill deleted",
+                            });
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                            res.send({
+                                success: false,
+                                message: err,
+                            });
+                        });
+                }
             }
         });
     }
