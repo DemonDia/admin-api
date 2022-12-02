@@ -185,19 +185,17 @@ const deleteExperience = async (req, res) => {
                 if (result.userId != req.body.userId) {
                     res.send({
                         success: false,
-                        message: "User does not have that skill",
+                        message: "User does not have that experience",
                     });
                 } else {
                     Experience.deleteOne(result)
                         .then((deleteResult) => {
-                            console.log(deleteResult);
                             res.send({
                                 success: true,
                                 message: "Experience deleted",
                             });
                         })
                         .catch((err) => {
-                            console.log(err);
                             res.send({
                                 success: false,
                                 message: err,

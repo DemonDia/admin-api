@@ -167,7 +167,45 @@ const updateProject = async (req, res) => {
     });
 };
 // ========================delete a project from db========================
-const deleteProject = async (req, res) => {};
+const deleteProject = async (req, res) => {
+    const projectId = req.params.projectId;
+    if (projectId.length != 24) {
+        res.send({
+            success: false,
+            message: "Project does not exist!",
+        });
+    } else {
+        await Project.findById(projectId).then((result) => {
+            if (!result) {
+                res.send({
+                    success: false,
+                    message: "Project does not exist!",
+                });
+            } else {
+                if (result.userId != req.body.userId) {
+                    res.send({
+                        success: false,
+                        message: "User does not have that project",
+                    });
+                } else {
+                    Project.deleteOne(result)
+                        .then((deleteResult) => {
+                            res.send({
+                                success: true,
+                                message: "Project deleted",
+                            });
+                        })
+                        .catch((err) => {
+                            res.send({
+                                success: false,
+                                message: err,
+                            });
+                        });
+                }
+            }
+        });
+    }
+};
 module.exports = {
     getAllProjects,
     getUserProjects,
