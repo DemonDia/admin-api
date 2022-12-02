@@ -93,6 +93,37 @@ const addExperience = async (req, res) => {
         }
     }
 };
+// ========================get experience by ID========================
+const getExperienceById = async (req, res) => {
+    const experienceId = req.params.experienceId;
+    if (experienceId.length != 24) {
+        res.send({
+            success: false,
+            message: "Experience is not found",
+        });
+    } else {
+        await Experience.findById(experienceId)
+            .then((result) => {
+                if (!result) {
+                    res.send({
+                        success: false,
+                        message: "Experience is not found",
+                    });
+                } else {
+                    res.send({
+                        success: true,
+                        data: result,
+                    });
+                }
+            })
+            .catch((err) => {
+                res.send({
+                    success: false,
+                    message: err,
+                });
+            });
+    }
+};
 // ========================update specific experience on db========================
 const updateExperience = async (req, res) => {
     await Experience.findById(req.body.id).then((result) => {
@@ -184,4 +215,5 @@ module.exports = {
     addExperience,
     updateExperience,
     deleteExperience,
+    getExperienceById
 };
