@@ -33,6 +33,10 @@ const projectSchema = mongoose.Schema({
         // ComponentLink
         type:Array,
         required:[true,"Please add some components if any"]
+    },
+    userId:{
+        type:String,
+        required:[true,"Please add a user"]
     }
 })
 module.exports = mongoose.model("Project",projectSchema)
