@@ -134,7 +134,6 @@ const deleteSkill = async (req, res) => {
         });
     } else {
         await Skill.findById(skillId).then((result) => {
-            console.log(req.body);
             if (!result) {
                 res.send({
                     success: false,
