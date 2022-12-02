@@ -30,4 +30,5 @@ app.use("/api/users",require("./routes/userRoutes"))
 app.use("/api/skills",require("./routes/skillRoutes"))
 app.use("/api/experience",require("./routes/experienceRoutes"))
 app.use("/api/contacts",require("./routes/contactRoutes"))
+app.use("/api/projects",require("./routes/projectRoutes"))
 app.listen(8000);
