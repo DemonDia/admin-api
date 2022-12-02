@@ -125,7 +125,47 @@ const getProjectById = async (req, res) => {
     }
 };
 // ========================update specific project on db========================
-const updateProject = async (req, res) => {};
+const updateProject = async (req, res) => {
+    await Project.findById(req.body.id).then((result) => {
+        if (!result) {
+            res.send({
+                success: false,
+                message: "Project does not exist!",
+            });
+        } else {
+            if (result.userId != req.body.userId) {
+                res.send({
+                    success: false,
+                    message: "User does not have that project",
+                });
+            } else {
+                Project.updateOne(
+                    { _id: result._id },
+                    {
+                        projectname: req.body.projectname,
+                        year: req.body.year,
+                        description: req.body.description,
+                        techstacks: req.body.techstacks,
+                        links: req.body.links,
+                        components: req.body.components,
+                    }
+                )
+                    .then((result) => {
+                        res.send({
+                            success: true,
+                            message: "Project updated",
+                        });
+                    })
+                    .catch((err) => {
+                        res.send({
+                            success: false,
+                            message: err,
+                        });
+                    });
+            }
+        }
+    });
+};
 // ========================delete a project from db========================
 const deleteProject = async (req, res) => {};
 module.exports = {
