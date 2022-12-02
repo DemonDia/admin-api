@@ -166,7 +166,7 @@ const updateExperience = async (req, res) => {
         }
     });
 };
-// ========================delete an experience on db========================
+// ========================delete an experience from db========================
 const deleteExperience = async (req, res) => {
     const experienceId = req.params.experienceId;
     if (experienceId.length != 24) {
