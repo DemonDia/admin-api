@@ -94,8 +94,41 @@ const addExperience = async (req, res) => {
     }
 };
 // ========================update specific experience on db========================
-const updateExperience = async (req, res) => {};
-// ========================delete a skill on db========================
+const updateExperience = async (req, res) => {
+    await Experience.findById(req.body.id).then((result) => {
+        if (!result) {
+            res.send({
+                success: false,
+                message: "Experience does not exist!",
+            });
+        } else {
+            Experience.updateOne(
+                { _id: result._id },
+                {
+                    rolename: req.body.rolename,
+                    companyname: req.body.companyname,
+                    comapanysite: req.body.comapanysite,
+                    starting: req.body.starting,
+                    ending: req.body.ending,
+                    details: req.body.details,
+                }
+            )
+                .then((result) => {
+                    res.send({
+                        success: true,
+                        message: "Experience updated",
+                    });
+                })
+                .catch((err) => {
+                    res.send({
+                        success: false,
+                        message: err,
+                    });
+                });
+        }
+    });
+};
+// ========================delete an experience on db========================
 const deleteExperience = async (req, res) => {};
 
 module.exports = {

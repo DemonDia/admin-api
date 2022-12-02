@@ -106,6 +106,11 @@ const updateSkill = async (req, res) => {
                     success: true,
                     message: "Skill updated",
                 });
+            }).catch(err=>{
+                res.send({
+                    success: false,
+                    message: err,
+                });
             });
         }
     });
