@@ -12,5 +12,5 @@ router.get("/all", getAllContacts);
 router.post("/add", protect, addContact);
 router.get("/:userId", protect, getUserContacts);
 router.put("/", protect, updateContact);
-router.delete("/:experienceId", protect, deleteContact);
+router.delete("/:contactId", protect, deleteContact);
 module.exports = router;

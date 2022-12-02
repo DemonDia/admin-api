@@ -128,7 +128,47 @@ const updateContact = async (req, res) => {
     });
 };
 // ========================delect specific contact from db========================
-const deleteContact = async (req, res) => {};
+const deleteContact = async (req, res) => {
+    const contactId = req.params.contactId;
+    if (contactId.length != 24) {
+        res.send({
+            success: false,
+            message: "Contact does not exist!",
+        });
+    } else {
+        await Contact.findById(contactId).then((result) => {
+            if (!result) {
+                res.send({
+                    success: false,
+                    message: "Contact does not exist!",
+                });
+            } else {
+                if (result.userId != req.body.userId) {
+                    res.send({
+                        success: false,
+                        message: "User does not have that contact",
+                    });
+                } else {
+                    Contact.deleteOne(result)
+                        .then((deleteResult) => {
+                            console.log(deleteResult);
+                            res.send({
+                                success: true,
+                                message: "Contact deleted",
+                            });
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                            res.send({
+                                success: false,
+                                message: err,
+                            });
+                        });
+                }
+            }
+        });
+    }
+};
 
 module.exports = {
     getAllContacts,
