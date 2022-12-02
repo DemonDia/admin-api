@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-const contactSchema = mongoose.Schema({
+const projectSchema = mongoose.Schema({
     projectname:{
         // project name
         type:String,
@@ -35,3 +35,4 @@ const contactSchema = mongoose.Schema({
         required:[true,"Please add some components if any"]
     }
 })
+module.exports = mongoose.model("Project",projectSchema)
