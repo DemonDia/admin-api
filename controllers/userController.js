@@ -64,17 +64,31 @@ const loginUser = asyncHandler(async (req, res) => {
             message: "Please fill up the fields",
         });
     }
-    const user = await User.findOne({ email, activated: true });
-    if (user && (await bcrypt.compare(password, user.password))) {
-        res.send({
-            success: true,
-            message: "Login successful",
-            token: generateJWT(user._id),
-        });
+    const user = await User.findOne({ email });
+    if (user) {
+        if (!user.activated) {
+            res.send({
+                success: false,
+                message: "Please activate your account!",
+            });
+        } else {
+            if (await bcrypt.compare(password, user.password)) {
+                res.send({
+                    success: true,
+                    message: "Login successful",
+                    token: generateJWT(user._id),
+                });
+            } else {
+                res.send({
+                    success: false,
+                    message: "Invalid pasword",
+                });
+            }
+        }
     } else {
         res.send({
             success: false,
-            message: "Invalid pasword or user",
+            message: "Invalid user",
         });
     }
 });
