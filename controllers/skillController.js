@@ -67,7 +67,7 @@ const addSkill = async (req, res) => {
         } else {
             const newSkill = new Skill({
                 userId,
-                skillname: req.body.skillname,
+                skillName: req.body.skillName,
                 year: req.body.year,
             });
 
@@ -106,7 +106,7 @@ const updateSkill = async (req, res) => {
             } else {
                 Skill.updateOne(
                     { _id: result._id },
-                    { skillname: req.body.name, year: req.body.year }
+                    { skillName: req.body.name, year: req.body.year }
                 )
                     .then((result) => {
                         res.send({

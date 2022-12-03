@@ -1,14 +1,14 @@
 const mongoose = require("mongoose")
 const experienceSchema = mongoose.Schema({
-    rolename:{
+    roleName:{
         type:String,
         required:[true,"Please add a role name"]
     },
-    companyname:{
+    companyName:{
         type:String,
         required:[true,"Please add a company name"]
     },
-    comapanysite:{
+    comapanySite:{
         type:String,
         required:false
     },

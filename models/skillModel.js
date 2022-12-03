@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 const skillSchema = mongoose.Schema({
-    skillname:{
+    skillName:{
         type:String,
         required:[true,"Please add a name"]
     },

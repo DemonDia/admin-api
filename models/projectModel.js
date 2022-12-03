@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 const projectSchema = mongoose.Schema({
-    projectname:{
+    projectName:{
         // project name
         type:String,
         required:[true,"Please add a name"]
@@ -15,7 +15,7 @@ const projectSchema = mongoose.Schema({
         type:Array,
         required:[true,"Please add some description"]
     },
-    techstacks:{
+    techStacks:{
         // string array
         type:Array,
         required:[true,"Please add some tech stacks"]

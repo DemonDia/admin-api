@@ -67,10 +67,10 @@ const addProject = async (req, res) => {
             });
         } else {
             const newProject = new Project({
-                projectname: req.body.projectname,
+                projectName: req.body.projectName,
                 year: req.body.year,
                 description: req.body.description,
-                techstacks: req.body.techstacks,
+                techStacks: req.body.techStacks,
                 links: req.body.links,
                 components: req.body.components,
                 userId,
@@ -142,10 +142,10 @@ const updateProject = async (req, res) => {
                 Project.updateOne(
                     { _id: result._id },
                     {
-                        projectname: req.body.projectname,
+                        projectName: req.body.projectName,
                         year: req.body.year,
                         description: req.body.description,
-                        techstacks: req.body.techstacks,
+                        techStacks: req.body.techStacks,
                         links: req.body.links,
                         components: req.body.components,
                     }

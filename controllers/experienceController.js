@@ -67,9 +67,9 @@ const addExperience = async (req, res) => {
             });
         } else {
             const newExperience = new Experience({
-                rolename: req.body.rolename,
-                companyname: req.body.companyname,
-                comapanysite: req.body.comapanysite,
+                roleName: req.body.roleName,
+                companyName: req.body.companyName,
+                comapanySite: req.body.comapanySite,
                 starting: req.body.starting,
                 ending: req.body.ending,
                 details: req.body.details,
@@ -142,9 +142,9 @@ const updateExperience = async (req, res) => {
                 Experience.updateOne(
                     { _id: result._id },
                     {
-                        rolename: req.body.rolename,
-                        companyname: req.body.companyname,
-                        comapanysite: req.body.comapanysite,
+                        roleName: req.body.roleName,
+                        companyName: req.body.companyName,
+                        comapanySite: req.body.comapanySite,
                         starting: req.body.starting,
                         ending: req.body.ending,
                         details: req.body.details,
