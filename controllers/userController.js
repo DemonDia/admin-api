@@ -37,7 +37,6 @@ const registerUser = asyncHandler(async (req, res) => {
             res.send({
                 success: true,
                 message: "Registration successful",
-                token: generateJWT(newUser._id),
             });
         })
         .catch((err) => {
