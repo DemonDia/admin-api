@@ -8,6 +8,7 @@ const registerUser = asyncHandler(async (req, res) => {
     const username = req.body.username;
     const email = req.body.email;
     const password = req.body.password;
+    const phoneNumber = req.body.phoneNumber;
     if (!username || !email || !password) {
         res.send({
             success: false,
@@ -29,7 +30,7 @@ const registerUser = asyncHandler(async (req, res) => {
         email,
         password: hashedPassword,
         phoneNumber,
-        activated:false
+        activated: false,
     });
     await User.create(newUser)
         .then((result) => {
@@ -63,7 +64,7 @@ const loginUser = asyncHandler(async (req, res) => {
             message: "Please fill up the fields",
         });
     }
-    const user = await User.findOne({ email,activated:true });
+    const user = await User.findOne({ email, activated: true });
     if (user && (await bcrypt.compare(password, user.password))) {
         res.send({
             success: true,
@@ -95,15 +96,15 @@ const getAllUsers = asyncHandler(async (req, res) => {
         });
 });
 
-const getMe = asyncHandler(async (req,res)=>{
-    console.log(req.user)
-    const {_id,username,email} = await User.findById(req.user.id);
+const getMe = asyncHandler(async (req, res) => {
+    console.log(req.user);
+    const { _id, username, email } = await User.findById(req.user.id);
     res.send({
-        success:true,
-        id:_id,
+        success: true,
+        id: _id,
         username,
-        email
-    })
-})
+        email,
+    });
+});
 
-module.exports = { registerUser, loginUser, getAllUsers,getMe };
+module.exports = { registerUser, loginUser, getAllUsers, getMe };
