@@ -34,6 +34,8 @@ const registerUser = asyncHandler(async (req, res) => {
     });
     await User.create(newUser)
         .then((result) => {
+            const token = generateJWT(newUser._id);
+            console.log(token)
             res.send({
                 success: true,
                 message: "Registration successful",
@@ -122,6 +124,7 @@ const getMe = asyncHandler(async (req, res) => {
         });
     } else {
         const { _id, username, email } = await User.findById(req.user.id);
+        // check token
         res.send({
             success: true,
             id: _id,
@@ -133,34 +136,66 @@ const getMe = asyncHandler(async (req, res) => {
 
 const verifyUser = asyncHandler(async (req, res) => {
     currentUser = await User.findById(req.params.userId);
-    if (!currentUser) {
+    currentToken = req.params.token;
+    validToken = verifyToken(currentToken);
+    if (!validToken) {
         res.send({
             success: false,
-            message: "User does not exist",
+            message: "Invalid token",
         });
     } else {
-        if (!currentUser.activated) {
-            User
-                .updateOne({ _id: currentUser._id }, { activated: true })
-                .then((result) => {
-                    res.send({
-                        success: true,
-                        message: "User verified",
-                    });
-                })
-                .catch((err) => {
-                    res.send({
-                        success: false,
-                        message: err,
-                    });
-                });
-        } else {
+        if (!currentUser) {
             res.send({
                 success: false,
-                message: "User already verified",
+                message: "User does not exist",
             });
+        } else {
+            if (!currentUser.activated) {
+                User.updateOne({ _id: currentUser._id }, { activated: true })
+                    .then((result) => {
+                        res.send({
+                            success: true,
+                            message: "User verified",
+                        });
+                    })
+                    .catch((err) => {
+                        res.send({
+                            success: false,
+                            message: err,
+                        });
+                    });
+            } else {
+                res.send({
+                    success: false,
+                    message: "User already verified",
+                });
+            }
         }
     }
 });
+
+const verifyToken = async (token) => {
+    console.log(token)
+    if (token) {
+        try {
+            // verify token
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+            // get user from token
+            currUser = await User.findById(decoded.id).select("-password");
+            console.log("currUser",currUser)
+            if (currUser) {
+                return true
+            } else {
+               return false
+            }
+        } catch (err) {
+            console.log(err)
+            return false
+        }
+    } else {
+        return false
+    }
+};
 
 module.exports = { registerUser, loginUser, getAllUsers, getMe, verifyUser };

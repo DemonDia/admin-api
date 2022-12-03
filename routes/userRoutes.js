@@ -12,6 +12,6 @@ router.post("/registration", registerUser);
 router.get("/", getAllUsers);
 router.post("/login", loginUser);
 router.get("/me",protect,getMe)
-router.put("/verify/:userId",verifyUser)
+router.put("/verify/:userId/:token",verifyUser)
 
 module.exports = router;
