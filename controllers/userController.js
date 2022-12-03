@@ -111,7 +111,6 @@ const getAllUsers = asyncHandler(async (req, res) => {
 });
 
 const getMe = asyncHandler(async (req, res) => {
-    console.log(req.user);
     if (!req.user) {
         res.send({
             success: false,
@@ -133,4 +132,36 @@ const getMe = asyncHandler(async (req, res) => {
     }
 });
 
-module.exports = { registerUser, loginUser, getAllUsers, getMe };
+const verifyUser = asyncHandler(async (req, res) => {
+    currentUser = await User.findById(req.params.userId);
+    if (!currentUser) {
+        res.send({
+            success: false,
+            message: "User does not exist",
+        });
+    } else {
+        if (!currentUser.activated) {
+            User
+                .updateOne({ _id: currentUser._id }, { activated: true })
+                .then((result) => {
+                    res.send({
+                        success: true,
+                        message: "User verified",
+                    });
+                })
+                .catch((err) => {
+                    res.send({
+                        success: false,
+                        message: err,
+                    });
+                });
+        } else {
+            res.send({
+                success: false,
+                message: "User already verified",
+            });
+        }
+    }
+});
+
+module.exports = { registerUser, loginUser, getAllUsers, getMe, verifyUser };
