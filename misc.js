@@ -17,7 +17,8 @@ const sendEmail = async (emailType, content) => {
         emailContent = `<p>Hello ${username},</p> <p>please click on <a target ="_blank" href = "${linkToClick}">this</a> link to verify your account.<p>`;
     } else if (emailType == "forgotPassword") {
         emailSubject = "Forgot your password?";
-        emailContent = "";
+        linkToClick = ` ${process.env.USER_INTERFACE}/resetpass/${_id}/${token}`;
+        emailContent = `<p>Hello ${username},</p> <p>please click on <a target ="_blank" href = "${linkToClick}">this</a> link to reset your password.<p>`;
     }
     await transporter.sendMail({
         from: `"Portfolio Site" ${process.env.TRANSPORTER_AUTH_USER}`, // sender address

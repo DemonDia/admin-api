@@ -62,7 +62,28 @@ const generateJWT = (id) => {
         expiresIn: "30d",
     });
 };
+const verifyToken = async (token) => {
+    console.log(token);
+    if (token) {
+        try {
+            // verify token
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
+            // get user from token
+            currUser = await User.findById(decoded.id).select("-password");
+            if (currUser) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (err) {
+            console.log(err);
+            return false;
+        }
+    } else {
+        return false;
+    }
+};
 // ========================login========================
 const loginUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
@@ -100,7 +121,7 @@ const loginUser = asyncHandler(async (req, res) => {
         });
     }
 });
-
+// ========================get all users========================
 const getAllUsers = asyncHandler(async (req, res) => {
     await User.find()
         .then((result) => {
@@ -117,7 +138,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
             });
         });
 });
-
+// ========================get curr user========================
 const getMe = asyncHandler(async (req, res) => {
     if (!req.user) {
         res.send({
@@ -140,7 +161,7 @@ const getMe = asyncHandler(async (req, res) => {
         });
     }
 });
-
+// ========================verify user========================
 const verifyUser = asyncHandler(async (req, res) => {
     currentUser = await User.findById(req.params.userId);
     currentToken = req.params.token;
@@ -180,29 +201,58 @@ const verifyUser = asyncHandler(async (req, res) => {
         }
     }
 });
-
-const verifyToken = async (token) => {
-    console.log(token);
-    if (token) {
-        try {
-            // verify token
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-            // get user from token
-            currUser = await User.findById(decoded.id).select("-password");
-            console.log("currUser", currUser);
-            if (currUser) {
-                return true;
-            } else {
-                return false;
+// ========================send forget pasword request========================
+const sendForgetPasswordEmail = asyncHandler(async (req, res) => {
+    const userEmail = req.body.email;
+    await User.findOne({email:userEmail})
+        .then(async (result) => {
+            if (result) {
+                token = await generateJWT(result._id);
+                if (result.activated) {
+                    const content = {
+                        user: result,
+                        token: token,
+                        recipient: result.email,
+                    };
+                    console.log("user",result)
+                    await sendEmail("forgotPassword", content)
+                        .then((result) => {
+                            res.send({
+                                success: true,
+                                message: "Email sent",
+                            });
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                            res.send({
+                                success: true,
+                                message: "",
+                            });
+                        });
+                } else {
+                    res.send({
+                        success: true,
+                        message: "",
+                    });
+                }
             }
-        } catch (err) {
+        })
+        .catch((err) => {
             console.log(err);
-            return false;
-        }
-    } else {
-        return false;
-    }
+            res.send({
+                success: true,
+                message: "",
+            });
+        });
+});
+// ========================change new password========================
+const changeNewPassword = asyncHandler(async (req, res) => {});
+module.exports = {
+    registerUser,
+    loginUser,
+    getAllUsers,
+    getMe,
+    verifyUser,
+    sendForgetPasswordEmail,
+    changeNewPassword,
 };
-
-module.exports = { registerUser, loginUser, getAllUsers, getMe, verifyUser };

@@ -5,13 +5,16 @@ const {
     loginUser,
     getAllUsers,
     getMe,
-    verifyUser
+    verifyUser,
+    sendForgetPasswordEmail,
+    changeNewPassword,
 } = require("../controllers/userController");
 const { protect } = require("../middleware/authMiddleware");
 router.post("/registration", registerUser);
 router.get("/", getAllUsers);
 router.post("/login", loginUser);
-router.get("/me",protect,getMe)
-router.put("/verify/:userId/:token",verifyUser)
-
+router.get("/me", protect, getMe);
+router.put("/verify/:userId/:token", verifyUser);
+router.put("/resetpass", sendForgetPasswordEmail);
+router.post("/changepass",changeNewPassword);
 module.exports = router;
