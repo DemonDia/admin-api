@@ -28,6 +28,8 @@ const registerUser = asyncHandler(async (req, res) => {
         username,
         email,
         password: hashedPassword,
+        phoneNumber,
+        activated:false
     });
     await User.create(newUser)
         .then((result) => {
@@ -61,7 +63,7 @@ const loginUser = asyncHandler(async (req, res) => {
             message: "Please fill up the fields",
         });
     }
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email,activated:true });
     if (user && (await bcrypt.compare(password, user.password))) {
         res.send({
             success: true,
