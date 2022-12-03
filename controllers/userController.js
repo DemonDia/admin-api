@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require("../models/userModel");
 const asyncHandler = require("express-async-handler");
-
+const { sendEmail } = require("../misc");
 // ========================register========================
 const registerUser = asyncHandler(async (req, res) => {
     const username = req.body.username;
@@ -33,12 +33,19 @@ const registerUser = asyncHandler(async (req, res) => {
         activated: false,
     });
     await User.create(newUser)
-        .then((result) => {
+        .then(async (result) => {
             const token = generateJWT(newUser._id);
-            console.log(token)
-            res.send({
-                success: true,
-                message: "Registration successful",
+            console.log(token);
+            const content = {
+                user: newUser,
+                token: token,
+                recipient: email,
+            };
+            await sendEmail("verificationEmail", content).then((result) => {
+                res.send({
+                    success: true,
+                    message: "Registration successful",
+                });
             });
         })
         .catch((err) => {
@@ -175,7 +182,7 @@ const verifyUser = asyncHandler(async (req, res) => {
 });
 
 const verifyToken = async (token) => {
-    console.log(token)
+    console.log(token);
     if (token) {
         try {
             // verify token
@@ -183,18 +190,18 @@ const verifyToken = async (token) => {
 
             // get user from token
             currUser = await User.findById(decoded.id).select("-password");
-            console.log("currUser",currUser)
+            console.log("currUser", currUser);
             if (currUser) {
-                return true
+                return true;
             } else {
-               return false
+                return false;
             }
         } catch (err) {
-            console.log(err)
-            return false
+            console.log(err);
+            return false;
         }
     } else {
-        return false
+        return false;
     }
 };
 
