@@ -204,7 +204,7 @@ const verifyUser = asyncHandler(async (req, res) => {
 // ========================send forget pasword request========================
 const sendForgetPasswordEmail = asyncHandler(async (req, res) => {
     const userEmail = req.body.email;
-    await User.findOne({email:userEmail})
+    await User.findOne({ email: userEmail })
         .then(async (result) => {
             if (result) {
                 token = await generateJWT(result._id);
@@ -214,7 +214,7 @@ const sendForgetPasswordEmail = asyncHandler(async (req, res) => {
                         token: token,
                         recipient: result.email,
                     };
-                    console.log("user",result)
+                    console.log("user", result);
                     await sendEmail("forgotPassword", content)
                         .then((result) => {
                             res.send({
@@ -246,7 +246,51 @@ const sendForgetPasswordEmail = asyncHandler(async (req, res) => {
         });
 });
 // ========================change new password========================
-const changeNewPassword = asyncHandler(async (req, res) => {});
+const changeNewPassword = asyncHandler(async (req, res) => {
+    const { newPassword, token, userId } = req.body;
+    validToken = verifyToken(token);
+    if (!validToken) {
+        res.send({
+            success: false,
+            message: "Invalid token",
+        });
+    } else {
+        currentUser = await User.findById(userId);
+        if (!currentUser) {
+            res.send({
+                success: false,
+                message: "Invalid user",
+            });
+        } else {
+            if (newPassword.length < 8) {
+                res.send({
+                    success: false,
+                    message: "Password must be at least 8 characters!",
+                });
+            } else {
+                const salt = await bcrypt.genSalt(10);
+                const hashedPassword = await bcrypt.hash(newPassword, salt);
+                await User.updateOne(
+                    { _id: currentUser._id },
+                    { password: hashedPassword }
+                )
+                    .then((result) => {
+                        res.send({
+                            success: true,
+                            message: "Password reset!",
+                        });
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        res.send({
+                            success: false,
+                            message: err,
+                        });
+                    });
+            }
+        }
+    }
+});
 module.exports = {
     registerUser,
     loginUser,
