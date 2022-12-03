@@ -112,13 +112,25 @@ const getAllUsers = asyncHandler(async (req, res) => {
 
 const getMe = asyncHandler(async (req, res) => {
     console.log(req.user);
-    const { _id, username, email } = await User.findById(req.user.id);
-    res.send({
-        success: true,
-        id: _id,
-        username,
-        email,
-    });
+    if (!req.user) {
+        res.send({
+            success: false,
+            message: "Invalid user",
+        });
+    } else if (req.user.id.length != 24) {
+        res.send({
+            success: false,
+            message: "Invalid ID",
+        });
+    } else {
+        const { _id, username, email } = await User.findById(req.user.id);
+        res.send({
+            success: true,
+            id: _id,
+            username,
+            email,
+        });
+    }
 });
 
 module.exports = { registerUser, loginUser, getAllUsers, getMe };
