@@ -69,7 +69,7 @@ const addExperience = async (req, res) => {
             const newExperience = new Experience({
                 roleName: req.body.roleName,
                 companyName: req.body.companyName,
-                comapanySite: req.body.comapanySite,
+                companySite: req.body.companySite,
                 starting: req.body.starting,
                 ending: req.body.ending,
                 details: req.body.details,
@@ -144,7 +144,7 @@ const updateExperience = async (req, res) => {
                     {
                         roleName: req.body.roleName,
                         companyName: req.body.companyName,
-                        comapanySite: req.body.comapanySite,
+                        companySite: req.body.companySite,
                         starting: req.body.starting,
                         ending: req.body.ending,
                         details: req.body.details,

@@ -8,7 +8,7 @@ const experienceSchema = mongoose.Schema({
         type:String,
         required:[true,"Please add a company name"]
     },
-    comapanySite:{
+    companySite:{
         type:String,
         required:false
     },

@@ -69,7 +69,7 @@ const addContact = async (req, res) => {
             const newContact = new Contact({
                 userId,
                 contactName: req.body.contactName,
-                contact: req.body.contactinfo,
+                contact: req.body.contactInfo,
             });
 
             await Contact.create(newContact)
@@ -108,7 +108,7 @@ const updateContact = async (req, res) => {
                     { _id: result._id },
                     {
                         contactName: req.body.contactName,
-                        contact: req.body.contactinfo,
+                        contact: req.body.contactInfo,
                     }
                 )
                     .then((result) => {
