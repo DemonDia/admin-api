@@ -8,9 +8,9 @@ const {
     deleteContact,
 } = require("../controllers/contactController");
 const { protect } = require("../middleware/authMiddleware");
-router.get("/all", getAllContacts);
+// router.get("/all", getAllContacts);
 router.post("/add", protect, addContact);
-router.get("/:userId", protect, getUserContacts);
+router.get("/:userId", getUserContacts);
 router.put("/", protect, updateContact);
 router.delete("/:contactId", protect, deleteContact);
 module.exports = router;

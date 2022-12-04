@@ -8,9 +8,9 @@ const {
     deleteSkill
 } = require("../controllers/skillController");
 const { protect } = require("../middleware/authMiddleware");
-router.get("/all", getAllSkills);
+// router.get("/all", getAllSkills);
 router.post("/add", protect, addSkill);
-router.get("/:userId", protect, getUserSkills);
+router.get("/:userId", getUserSkills);
 router.put("/", protect, updateSkill);
 router.delete("/:skillId",protect,deleteSkill)
 module.exports = router;
