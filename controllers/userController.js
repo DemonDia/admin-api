@@ -151,13 +151,14 @@ const getMe = asyncHandler(async (req, res) => {
             message: "Invalid ID",
         });
     } else {
-        const { _id, username, email } = await User.findById(req.user.id);
+        const { _id, username, email,phoneNumber } = await User.findById(req.user.id);
         // check token
         res.send({
             success: true,
             id: _id,
             username,
             email,
+            phoneNumber
         });
     }
 });
