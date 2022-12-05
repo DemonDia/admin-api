@@ -151,14 +151,16 @@ const getMe = asyncHandler(async (req, res) => {
             message: "Invalid ID",
         });
     } else {
-        const { _id, username, email,phoneNumber } = await User.findById(req.user.id);
+        const { _id, username, email, phoneNumber } = await User.findById(
+            req.user.id
+        );
         // check token
         res.send({
             success: true,
             id: _id,
             username,
             email,
-            phoneNumber
+            phoneNumber,
         });
     }
 });
@@ -292,6 +294,36 @@ const changeNewPassword = asyncHandler(async (req, res) => {
         }
     }
 });
+
+// ========================change user name========================
+const changeUserName = asyncHandler(async (req, res) => {
+    const userId = req.body.id;
+    await User.findById(userId).then((result) => {
+        if (!result) {
+            res.send({
+                success: false,
+                message: "User does not exist!",
+            });
+        } else {
+            User.updateOne(
+                { _id: result._id },
+                { username: req.body.newUsername }
+            )
+                .then((result) => {
+                    res.send({
+                        success: true,
+                        message: "Username updated",
+                    });
+                })
+                .catch((err) => {
+                    res.send({
+                        success: false,
+                        message: err,
+                    });
+                });
+        }
+    });
+});
 module.exports = {
     registerUser,
     loginUser,
@@ -300,4 +332,5 @@ module.exports = {
     verifyUser,
     sendForgetPasswordEmail,
     changeNewPassword,
+    changeUserName,
 };
