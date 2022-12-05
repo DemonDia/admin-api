@@ -8,7 +8,8 @@ const {
     verifyUser,
     sendForgetPasswordEmail,
     changeNewPassword,
-    changeUserName
+    changeUserName,
+    deleteAccount
 } = require("../controllers/userController");
 const { protect } = require("../middleware/authMiddleware");
 router.post("/registration", registerUser);
@@ -19,4 +20,5 @@ router.put("/verify/:userId/:token", verifyUser);
 router.put("/resetpass", sendForgetPasswordEmail);
 router.post("/changepass",changeNewPassword);
 router.put("/changename",protect,changeUserName);
+router.delete("/:userId",protect,deleteAccount);
 module.exports = router;

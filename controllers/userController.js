@@ -1,8 +1,14 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require("../models/userModel");
+// for delete account
+const Skill = require("../models/skillModel");
+const Project = require("../models/projectModel");
+const Experience = require("../models/experienceModel");
+const Contact = require("../models/contactModel");
 const asyncHandler = require("express-async-handler");
 const { sendEmail } = require("../misc");
+const { getAllSkills } = require("./skillController");
 // ========================register========================
 const registerUser = asyncHandler(async (req, res) => {
     const username = req.body.username;
@@ -324,6 +330,39 @@ const changeUserName = asyncHandler(async (req, res) => {
         }
     });
 });
+
+// ========================delete account========================
+
+const deleteAccount = asyncHandler(async (req, res) => {
+    userId = req.params.userId;
+    currUser = await User.findById(userId);
+    if (!currUser) {
+        res.send({
+            success: false,
+            message: "User not found",
+        });
+    } else {
+        await Skill.deleteMany({ userId });
+        await Contact.deleteMany({ userId });
+        await Experience.deleteMany({ userId });
+        await Project.deleteMany({ userId });
+        await User.deleteOne(currUser)
+            .then((deleteResult) => {
+                console.log(deleteResult);
+                res.send({
+                    success: true,
+                    message: "User deleted",
+                });
+            })
+            .catch((err) => {
+                console.log(err);
+                res.send({
+                    success: false,
+                    message: err,
+                });
+            });
+    }
+});
 module.exports = {
     registerUser,
     loginUser,
@@ -333,4 +372,5 @@ module.exports = {
     sendForgetPasswordEmail,
     changeNewPassword,
     changeUserName,
+    deleteAccount,
 };
