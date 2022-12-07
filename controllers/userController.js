@@ -27,40 +27,40 @@ const registerUser = asyncHandler(async (req, res) => {
             success: false,
             message: "User exists",
         });
-    }
-
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-    const newUser = new User({
-        username,
-        email,
-        password: hashedPassword,
-        phoneNumber,
-        activated: false,
-    });
-    await User.create(newUser)
-        .then(async (result) => {
-            const token = generateJWT(newUser._id);
-            console.log(token);
-            const content = {
-                user: newUser,
-                token: token,
-                recipient: email,
-            };
-            await sendEmail("verificationEmail", content).then((result) => {
+    } else {
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+        const newUser = new User({
+            username,
+            email,
+            password: hashedPassword,
+            phoneNumber,
+            activated: false,
+        });
+        await User.create(newUser)
+            .then(async (result) => {
+                const token = generateJWT(newUser._id);
+                console.log(token);
+                const content = {
+                    user: newUser,
+                    token: token,
+                    recipient: email,
+                };
+                await sendEmail("verificationEmail", content).then((result) => {
+                    res.send({
+                        success: true,
+                        message: "Registration successful",
+                    });
+                });
+            })
+            .catch((err) => {
+                console.log(err);
                 res.send({
-                    success: true,
-                    message: "Registration successful",
+                    success: false,
+                    message: err,
                 });
             });
-        })
-        .catch((err) => {
-            console.log(err);
-            res.send({
-                success: false,
-                message: err,
-            });
-        });
+    }
 });
 // ========================JWT========================
 const generateJWT = (id) => {
